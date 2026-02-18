@@ -1,7 +1,6 @@
 'use client'
 
-import { usePathname } from 'next/navigation'
-import { logout } from '@/lib/actions'
+import { usePathname, useRouter } from 'next/navigation'
 import { LogOut } from 'lucide-react'
 
 const titles: Record<string, string> = {
@@ -12,8 +11,17 @@ const titles: Record<string, string> = {
 
 export default function TopBar({ userName }: { userName?: string }) {
   const pathname = usePathname()
+  const router = useRouter()
   const title = titles[pathname] ?? 'Family Finance'
-  const initials = userName ? userName.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2) : 'FF'
+  const initials = userName
+    ? userName.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2)
+    : 'FF'
+
+  async function handleLogout() {
+    await fetch('/api/auth/logout', { method: 'POST' })
+    router.push('/login')
+    router.refresh()
+  }
 
   return (
     <header style={{
@@ -44,15 +52,18 @@ export default function TopBar({ userName }: { userName?: string }) {
         }}>
           {initials}
         </div>
-        <form action={logout}>
-          <button type="submit" style={{
-            background: 'none', border: 'none', cursor: 'pointer',
-            color: 'var(--text-muted)', padding: '4px', display: 'flex',
-            alignItems: 'center',
-          }}>
+        {userName && (
+          <button
+            onClick={handleLogout}
+            style={{
+              background: 'none', border: 'none', cursor: 'pointer',
+              color: 'var(--text-muted)', padding: '4px', display: 'flex', alignItems: 'center',
+            }}
+            title="Sign out"
+          >
             <LogOut size={18} />
           </button>
-        </form>
+        )}
       </div>
     </header>
   )

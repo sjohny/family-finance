@@ -10,7 +10,12 @@ export const metadata: Metadata = {
 }
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  const session = await getSession()
+  let session = null
+  try {
+    session = await getSession()
+  } catch {
+    // No session, user not logged in
+  }
 
   return (
     <html lang="en">
@@ -20,11 +25,13 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
       </head>
       <body>
-        <TopBar userName={session?.name} />
-        <main className="pb-24 pt-16 min-h-screen">
-          <div className="max-w-2xl mx-auto px-4 py-6">
-            {children}
-          </div>
+        {session && <TopBar userName={session.name} />}
+        <main className={session ? 'pb-24 pt-16 min-h-screen' : 'min-h-screen'}>
+          {session ? (
+            <div className="max-w-2xl mx-auto px-4 py-6">
+              {children}
+            </div>
+          ) : children}
         </main>
         {session && <BottomNav />}
       </body>
