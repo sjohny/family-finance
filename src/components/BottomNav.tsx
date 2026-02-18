@@ -2,12 +2,12 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { LayoutDashboard, BookOpen, Vault } from 'lucide-react'
+import { LayoutDashboard, BookOpen, PiggyBank } from 'lucide-react'
 
 const links = [
   { href: '/', label: 'Home', icon: LayoutDashboard },
   { href: '/ledger', label: 'Ledger', icon: BookOpen },
-  { href: '/vault', label: 'Vault', icon: Vault },
+  { href: '/vault', label: 'Vault', icon: PiggyBank },
 ]
 
 export default function BottomNav() {
