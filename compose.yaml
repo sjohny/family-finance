@@ -1,0 +1,18 @@
+version: '3.8'
+services:
+  family-finance:
+    build: .
+    container_name: family_finance_planner
+    ports:
+      - "3999:3000"
+    volumes:
+      - ./finance-data:/data
+    environment:
+      - DATABASE_URL=file:/data/dev.db
+      - NODE_ENV=production
+    restart: always
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:3000"]
+      interval: 30s
+      timeout: 10s
+      retries: 3

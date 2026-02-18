@@ -1,0 +1,76 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Account {
+  id          String   @id @default(cuid())
+  name        String
+  type        String   // "bank" | "savings" | "checking"
+  balance     Float    @default(0)
+  currency    String   @default("USD")
+  updatedAt   DateTime @updatedAt
+  createdAt   DateTime @default(now())
+}
+
+model Investment {
+  id          String   @id @default(cuid())
+  name        String
+  platform    String
+  currentValue Float   @default(0)
+  initialValue Float   @default(0)
+  updatedAt   DateTime @updatedAt
+  createdAt   DateTime @default(now())
+}
+
+model Loan {
+  id              String   @id @default(cuid())
+  name            String
+  toWhom          String
+  totalAmount     Float
+  remainingBalance Float
+  monthlyPayment  Float    @default(0)
+  interestRate    Float    @default(0)
+  updatedAt       DateTime @updatedAt
+  createdAt       DateTime @default(now())
+}
+
+model Transaction {
+  id          String   @id @default(cuid())
+  type        String   // "income" | "expense"
+  description String
+  amount      Float
+  category    String
+  isRecurring Boolean  @default(false)
+  date        DateTime @default(now())
+  createdAt   DateTime @default(now())
+}
+
+model Budget {
+  id           String   @id @default(cuid())
+  month        Int      // 1-12
+  year         Int
+  monthlyIncome Float   @default(0)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@unique([month, year])
+}
+
+model Subscription {
+  id          String   @id @default(cuid())
+  name        String
+  amount      Float
+  category    String   // "ai_tools" | "google" | "internet" | "insurance" | "other"
+  billingDay  Int      @default(1)
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}

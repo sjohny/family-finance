@@ -1,0 +1,9 @@
+.git
+.gitignore
+node_modules
+.next
+*.md
+*.log
+finance-data
+.env.local
+.env
