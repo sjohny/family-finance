@@ -1,18 +1,14 @@
-version: '3.8'
 services:
   family-finance:
-    build: .
     container_name: family_finance_planner
+    image: spjts/family-finance:latest
+    restart: unless-stopped
     ports:
       - "3999:3000"
     volumes:
-      - ./finance-data:/data
+      - /mnt/pool1/dockge/configs/family-finance/db:/data
+      - /etc/localtime:/etc/localtime:ro
     environment:
       - DATABASE_URL=file:/data/dev.db
       - NODE_ENV=production
-    restart: always
-    healthcheck:
-      test: ["CMD", "wget", "--spider", "-q", "http://localhost:3000"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
+      - JWT_SECRET=change-this-to-a-long-random-string
